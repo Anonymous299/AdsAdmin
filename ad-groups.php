@@ -78,8 +78,14 @@ use AdsAdmin\Helpers;
                                         
                                          // Iterates over all rows in all messages and prints the requested field values for
                                         // the ad group in each row.
-                                        $stream = getAdGroupData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["campaignId"]);
-                                        foreach ($stream->iterateAllElements() as $googleAdsRow) {
+                                        $stream = getAdGroupData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["campaignId"], False);
+                                        $previousStream = getAdGroupData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["campaignId"], True);
+
+                                        $mi = new MultipleIterator();
+                                        $mi->attachIterator($stream->iterateAllElements());
+                                        $mi->attachIterator($previousStream->iterateAllElements());
+
+                                        foreach ($mi as [$googleAdsRow, $previousGoogleAdsRow]) {
                                             $urlArray["adGroupId"] = $googleAdsRow->getAdGroup()->getId();
                                             $urlArray["adGroupName"] = $googleAdsRow->getAdGroup()->getName();
 
@@ -104,6 +110,14 @@ use AdsAdmin\Helpers;
                                             . '<td>' . $googleAdsRow->getMetrics()->getImpressions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getAverageCpc() . '</td></tr>';
+
+                                            echo '<tr><td>Previous</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr(). '%</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getClicks() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getConversions() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getImpressions() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getAverageCpc() . '</td></tr>';
 
                                             echo '<tr><td class="text-end">Keywords:</td>';
                                            //Print keywords

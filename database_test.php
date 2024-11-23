@@ -113,4 +113,47 @@ function updateIniFile($filePath, $section, $key, $newValue) {
 
     echo "Key '$key' in section '$section' updated successfully.\n";
 }
+
+function isKeyValueSet($filePath, $section, $key){
+    
+    if (!file_exists($filePath)) {
+        die("Error: INI file does not exist.");
+    }
+
+    // Parse the .ini file into an array
+    $iniArray = parse_ini_file($filePath, true); // true enables sections
+
+    // Check if the section exists
+    if (!isset($iniArray[$section])) {
+        die("Error: Section '$section' does not exist in the INI file.");
+    }
+
+    // Check if the key exists in the section
+    if (!array_key_exists($key, $iniArray[$section])) {
+        die("Error: Key '$key' does not exist in the section '$section'.");
+    }
+
+    return !empty($iniArray[$section][$key]);
+}
+
+function getKeyValue($filePath, $section, $key){
+    if (!file_exists($filePath)) {
+        die("Error: INI file does not exist.");
+    }
+
+    // Parse the .ini file into an array
+    $iniArray = parse_ini_file($filePath, true); // true enables sections
+
+    // Check if the section exists
+    if (!isset($iniArray[$section])) {
+        die("Error: Section '$section' does not exist in the INI file.");
+    }
+
+    // Check if the key exists in the section
+    if (!array_key_exists($key, $iniArray[$section])) {
+        die("Error: Key '$key' does not exist in the section '$section'.");
+    }
+
+    return $iniArray[$section][$key];
+}
 ?>

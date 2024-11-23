@@ -31,5 +31,7 @@ if($_GET["end"]!=null){
 
 if($_GET["range"]!=null){
     $_SESSION["range"] = $_GET["range"];
+    $_SESSION["start"] = null;
+    $_SESSION["end"] = null;
 }
 ?>

@@ -75,8 +75,8 @@ use AdsAdmin\Helpers;
                         <?php 
                         session_start();
 
-                        
                         $adCount = 0;
+                        //Get a list of ads to iterate over
                         $stream = getAdsData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["adGroupId"]);
                         foreach ($stream->iterateAllElements() as $googleAdsRow) {
                             echo '<div class="col">
@@ -132,22 +132,22 @@ use AdsAdmin\Helpers;
                                         echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $headline->getText() . '">';
                                         $headlineCount = $headlineCount + 1;
                                     }
+                                    // Create empty fields in case we want to add more headlines to the ad
                                     while($headlineCount < $headlineMax){
                                         echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off>';
                                         $headlineCount = $headlineCount + 1;
                                     }
                                     
                                     echo '<h1>Descriptions</h1>';
-// ad_group_ad.ad.responsive_search_ad.descriptions
-$descriptionCount = 0;
-$descriptions = $googleAdsRow->getAdGroupAd()->getAd()->getResponsiveSearchAd()->getDescriptions();
-$descriptionMax = 4;
+
+                                    $descriptionCount = 0;
+                                    $descriptions = $googleAdsRow->getAdGroupAd()->getAd()->getResponsiveSearchAd()->getDescriptions();
+                                    $descriptionMax = 4;
                                     foreach($descriptions as $description){
-                                        // echo  '<textarea id="description' . $adCount . $descriptionCount . ' name="description' . $adCount . $descriptionCount . '" class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;></textarea>';
                                         echo '<textarea autocomplete=off id="description' . $adCount . $descriptionCount . '" name="description' . $adCount . $descriptionCount . '">' . $description->getText() . '</textarea>';
                                         $descriptionCount = $descriptionCount + 1;
-                                        // echo $descriptionCount;
                                     }
+                                    // Create empty fields in case we want to add more descriptions to the ad
                                     while($descriptionCount < $descriptionMax){
                                         echo '<textarea autocomplete=off></textarea>';
                                         $descriptionCount = $descriptionCount + 1;
@@ -160,8 +160,6 @@ $descriptionMax = 4;
                                     foreach($finalUrls as $finalUrl){
                                         echo '<p style="font-size: 14px;">' . $finalUrl .'</p>';
                                     }
-
-                                    echo $googleAdsRow->getAdGroupAd()->getAd()->getDisplayUrl();
 
                                     echo '<h1>Display Path</h1>';
 
@@ -181,149 +179,8 @@ $descriptionMax = 4;
                             </div>
                         </div>';
                         $adCount = $adCount + 1;
-                  
                         }                 
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                        // <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>               
                          ?>
-                        
-                        <!-- <div class="col">
-                            <div class="card">
-                                <div class="card-body p-4">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Clicks</td>
-                                                    <td>2501</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>CTR</td>
-                                                    <td>10.93%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cost/Click</td>
-                                                    <td>$23.55</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Conversions</td>
-                                                    <td>60</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Conversion Rate</td>
-                                                    <td>8.23%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cost/Conversion</td>
-                                                    <td>$19.22</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Impressions</td>
-                                                    <td>5300</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <h1>Headings</h1>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <h1>Descriptions</h1>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <h1>Landing Page</h1>
-                                    <p style="font-size: 14px;">https://thetermguy.ca/how-much-insurance.html</p>
-                                    <h1>Display Path</h1>
-                                    <p style="font-size: 14px;">https://thetermguy.ca/how-much-insurance.html</p><button class="btn btn-primary" type="button">Save</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="card">
-                                <div class="card-body p-4">
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Clicks</td>
-                                                    <td>2501</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>CTR</td>
-                                                    <td>10.93%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cost/Click</td>
-                                                    <td>$23.55</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Conversions</td>
-                                                    <td>60</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Conversion Rate</td>
-                                                    <td>8.23%</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Cost/Conversion</td>
-                                                    <td>$19.22</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Impressions</td>
-                                                    <td>5300</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <h1>Headings</h1>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <p style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">Life Insurance Calculator</p>
-                                    <h1>Descriptions</h1>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <p class="card-text" style="border-width: 1px;border-style: solid;border-radius: 2px;">We make it easy to calculate how much life insurance you need online.</p>
-                                    <h1>Landing Page</h1>
-                                    <p style="font-size: 14px;">https://thetermguy.ca/how-much-insurance.html</p>
-                                    <h1>Display Path</h1>
-                                    <p style="font-size: 14px;">https://thetermguy.ca/how-much-insurance.html</p><button class="btn btn-primary" type="button">Save</button>
-                                </div>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>

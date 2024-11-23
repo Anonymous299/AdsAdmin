@@ -52,11 +52,12 @@ if (isset($_GET['code']))
   // Get access and refresh tokens (if access_type is offline)
   $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 
-  /** Save access and refresh token to the session variables.
-    * ACTION ITEM: In a production app, you likely want to save the
-    *              refresh token in a secure persistent storage instead. */
-  $_SESSION['access_token'] = $token;
-  DatabaseHelpers\insertOrUpdateRefreshToken($client->getRefreshToken(), $servername, $username, $password, $dbname);
+  /** Save refresh token to the ini file. */
+  if(empty($client->getRefreshToken())){
+    die("Error: Could not fetch refresh token. Input it manually, or create new credentials");
+  }
+  DatabaseHelpers\updateIniFile('google_ads_php.ini', 'OAUTH2', 'refreshToken', $client->getRefreshToken());
+
   
   // // Space-separated string of granted scopes if it exists, otherwise null.
   // $granted_scopes = $client->getOAuth2Service()->getGrantedScope();
@@ -67,8 +68,8 @@ if (isset($_GET['code']))
   // ];
   // $_SESSION['granted_scopes_dict'] = $granted_scopes_dict;
   
-  // $redirect_uri = 'http://' . $_SERVER['HTTP_HOST']. '/AdsAdmin' . '/';
-  // header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+  $redirect_uri = 'http://' . $_SERVER['HTTP_HOST']. '/AdsAdmin' . '/';
+  header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 }
 
 // An error response e.g. error=access_denied

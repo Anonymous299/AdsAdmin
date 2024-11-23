@@ -20,39 +20,63 @@ use Google\Ads\GoogleAds\V18\Services\MutateAdsRequest;
 use Google\Ads\GoogleAds\V18\Resources\Ad;
 
 
-function getWeekAgoStartDate(){
-    $week_ago= time() - 7*86400;
+function getWeekAgoStartDate($previous){
+    $subtraction_factor = $previous ? 2*7*86400 : 7*86400;
+    $week_ago= time() - $subtraction_factor;
     return gmdate("Y-m-d", $week_ago);
 }
 
-function getStartOfMonthDate(){
-    return date('Y-m-01');
+function getStartOfMonthDate($previous){
+    $firstOfMonth = date('Y-m-01');
+    if(!$previous){
+        return $firstOfMonth;
+    }
+    $firstOfLastMonth = new DateTime("first day of last month");
+    return $firstOfLastMonth->format('Y-m-d');
 }
 
-function getLast30StartDate(){
-    
-    $last30 = time() - 30*86400;
+function getLast30StartDate($previous){
+    $subtraction_factor = $previous ? 2*30*86400 : 30*86400;
+    $last30 = time() - $subtraction_factor;
     return gmdate("Y-m-d", $last30);
 }
 
-function getStartAndEndDate($startDate, $endDate, $range){
+function getStartAndEndDate($startDate, $endDate, $range, $previous){
     
     if($startDate == null && $endDate == null){
         if($range == null || $range == 0){
-            $out["startDate"] = getWeekAgoStartDate();
+            $out["startDate"] = getWeekAgoStartDate($previous);
+            if($previous){
+                $out["endDate"] = getWeekAgoStartDate(False);
+            }
         }
         else if($range == 1){
-            $out["startDate"] = getStartOfMonthDate();
+            $out["startDate"] = getStartOfMonthDate($previous);
+            if($previous){
+                $out["endDate"] = getStartOfMonthDate(False);
+            }
         }
         else{
-            $out["startDate"] = getLast30StartDate();
-       
+            $out["startDate"] = getLast30StartDate($previous);
+            if($previous){
+                $out["endDate"] = getLast30StartDate(False);
+            }
         }
         
+        if(!$previous){
         $out["endDate"] = gmdate("Y-m-d", time());
-
+        }
     }
     else{
+        if($startDate != null && $previous == True){
+            $startTime = strtotime($startDate);
+            $endTime = $endDate != null ? strtotime($endDate) : time();
+            $diff = $endTime - $startTime;
+            $prevStartTime = $startTime - $diff;
+            $endDate = $startDate;
+            $startDate = gmdate("Y-m-d", $prevStartTime);
+        }
+
         $out["startDate"] = $startDate;
         $out["endDate"] = $endDate;
     }
@@ -114,9 +138,9 @@ function getKeywordData($adGroupId){
     return getStreamFromQuery($query);
 }
 
-function getAdsData($startDate, $endDate, $range, $adGroupId){
+function getAdsData($startDate, $endDate, $range, $adGroupId, $previous=False){
 
-    $dates = getStartAndEndDate($startDate, $endDate, $range);
+    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 
@@ -126,11 +150,11 @@ function getAdsData($startDate, $endDate, $range, $adGroupId){
     return getStreamFromQuery($query);
 }
 
-function getAdGroupData($startDate, $endDate, $range, $campaignId){
+function getAdGroupData($startDate, $endDate, $range, $campaignId, $previous=False){
   
     $customerId = '6079650413';
 
-    $dates = getStartAndEndDate($startDate, $endDate, $range);
+    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 
@@ -140,10 +164,11 @@ function getAdGroupData($startDate, $endDate, $range, $campaignId){
     return getStreamFromQuery($query);
 }
 
-function getCampaignData($startDate, $endDate, $range){
+function getCampaignData($startDate, $endDate, $range, $previous=False){
     
-
-    $dates = getStartAndEndDate($startDate, $endDate, $range);
+    error_reporting(E_ALL);
+    ini_set('display_errors', 'On');
+    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 

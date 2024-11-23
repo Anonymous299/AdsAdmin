@@ -2,6 +2,7 @@
 require_once 'ads_api.php';
 require_once 'session_manager.php';
 require_once 'helpers.php';
+require_once 'auth.php';
 
 use AdsAdmin\Helpers;
 ?>
@@ -78,17 +79,31 @@ use AdsAdmin\Helpers;
                                         
                                         // Iterates over all rows in all messages and prints the requested field values for
                                         // the campaign in each row.
-                                        $stream = getCampaignData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"]);
-                                        foreach ($stream->iterateAllElements() as $googleAdsRow) {
+                                        $stream = getCampaignData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], False);
+                                        $previousStream = getCampaignData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], True);
+
+                                        $mi = new MultipleIterator();
+                                        $mi->attachIterator($stream->iterateAllElements());
+                                        $mi->attachIterator($previousStream->iterateAllElements());
+
+                                        foreach ($mi as [$googleAdsRow, $previousGoogleAdsRow]) {
                                             $urlArray["campaignId"] = $googleAdsRow->getCampaign()->getId();
                                             $urlArray["campaignName"] = $googleAdsRow->getCampaign()->getName();
-                                            echo '<tr><td><a href="'. Helpers\generateUrlWithDate('ad-groups.php', $urlArray, $_SESSION["startDate"], $_SESSION["endDate"], $_SESSION["range"]) .'">' . $googleAdsRow->getCampaign()->getName() .'</a></td>'
+                                            echo '<tr><td><a href="'. Helpers\generateUrlWithDate('ad-groups.php', $urlArray, $_SESSION["start"], $_SESSION["end"], $_SESSION["range"]) .'">' . $googleAdsRow->getCampaign()->getName() .'</a></td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getImpressions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getCtr(). '%</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getAverageCost() . '</td></tr>';
+
+                                            echo '<tr><td>Previous</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getConversions() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getClicks() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getImpressions() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr(). '%</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getAverageCost() . '</td></tr>';
                                         }   
                                         ?>
                                     </tbody>
