@@ -1,9 +1,9 @@
 <?php
     require_once __DIR__.'/vendor/autoload.php';
     require_once 'ads_api.php';
+    require_once 'helpers.php';
 
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
+    use AdsAdmin\Helpers;
 
     $newHeadlines = [];
     $newDescriptions = [];
@@ -29,11 +29,13 @@
             $finalUrl = $value;
         }
     }
-    echo count($newDescriptions);
 
-    updateAd($_GET["adId"], $newHeadlines, $newDescriptions, $finalUrl, $path1, $path2);
+    $result = updateAd($_GET["adId"], $newHeadlines, $newDescriptions, $finalUrl, $path1, $path2);
 
 
-    $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] .'/AdsAdmin'. '/ads.php';
+    $redirect_uri =  Helpers\getBaseUrl() . '/ads.php';
+    if($result){
+        $redirect_uri = $redirect_uri . '?error=' . base64_encode($result);
+    }
     header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
 ?>

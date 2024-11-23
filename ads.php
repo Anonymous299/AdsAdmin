@@ -4,7 +4,6 @@ require_once 'session_manager.php';
 require_once 'helpers.php';
 
 use AdsAdmin\Helpers;
-
 ?>
 
 <!DOCTYPE html>
@@ -75,6 +74,10 @@ use AdsAdmin\Helpers;
                         <?php 
                         session_start();
 
+                        if($_GET['error']){
+                            echo base64_decode($_GET['error']);
+                        }
+
                         $adCount = 0;
                         //Get a list of ads to iterate over
                         $stream = getAdsData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["adGroupId"]);
@@ -96,7 +99,7 @@ use AdsAdmin\Helpers;
                                                 </tr>
                                                 <tr>
                                                     <td>CTR</td>
-                                                    <td>' . $googleAdsRow->getMetrics()->getCtr() . '%</td>
+                                                    <td>' . $googleAdsRow->getMetrics()->getCtr() * 100 . '%</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Cost/Click</td>
@@ -108,7 +111,7 @@ use AdsAdmin\Helpers;
                                                 </tr>
                                                 <tr>
                                                     <td>Conversion Rate</td>
-                                                    <td>' . $googleAdsRow->getMetrics()->getConversionsFromInteractionsRate() . '%</td>
+                                                    <td>' . $googleAdsRow->getMetrics()->getConversionsFromInteractionsRate() * 100 . '%</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Cost/Conversion</td>

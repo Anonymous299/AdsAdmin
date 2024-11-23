@@ -1,8 +1,10 @@
 <?php 
 require_once __DIR__.'/vendor/autoload.php';
 require_once 'database_test.php';
+require_once 'helpers.php';
 
 use AdsAdmin\DatabaseHelpers;
+use AdsAdmin\Helpers;
 
 session_start();
 
@@ -11,7 +13,7 @@ $client = new Google\Client();
 // Required, call the setAuthConfig function to load authorization credentials from
 // client_secret.json file.
 $client->setAuthConfigFile('web_creds.json');
-$client->setRedirectUri('http://' . $_SERVER['HTTP_HOST']. $_SERVER['PHP_SELF']);
+$client->setRedirectUri(Helpers\getProtocol() . '://' . $_SERVER['HTTP_HOST']. $_SERVER['PHP_SELF']);
 
 $google_ads_scope = 'https://www.googleapis.com/auth/adwords'; // Full access scope for Google Ads API
 
@@ -58,18 +60,18 @@ if (isset($_GET['code']))
   }
   $result = DatabaseHelpers\updateIniFile('google_ads_php.ini', 'OAUTH2', 'refreshToken', $client->getRefreshToken());
 
-  
-  // // Space-separated string of granted scopes if it exists, otherwise null.
-  // $granted_scopes = $client->getOAuth2Service()->getGrantedScope();
-
-  // // Determine which scopes user granted and build a dictionary
-  // $granted_scopes_dict = [
-  //   'Ads' => str_contains($granted_scopes, $google_ads_scope)
-  // ];
-  // $_SESSION['granted_scopes_dict'] = $granted_scopes_dict;
   if($result == True){
-  $redirect_uri = 'http://' . $_SERVER['HTTP_HOST']. '/AdsAdmin' . '/';
+  $redirect_uri = Helpers\getBaseUrl();
   header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+  }
+  else{
+    printf(
+      'Refresh token could not be saved. Please set the refreshToken attribute in google_ads_php.ini to the following: "%s".%s
+      Warning: Once this window is closed, you will not be able to get another refresh token. Please save this refresh token securely.%s',
+      $client->getRefreshToken(),
+      PHP_EOL,
+      PHP_EOL
+  );
   }
 }
 

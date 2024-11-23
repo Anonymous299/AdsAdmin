@@ -104,7 +104,7 @@ use AdsAdmin\Helpers;
 
                                             //Print metrics
                                             echo '<tr><td><a class="text-end" href="' . Helpers\generateUrlWithDate('ads.php', $urlArray, $_SESSION["start"], $_SESSION["end"], $_SESSION["range"]) .'">' . $googleAdsRow->getAdGroup()->getName() .'</a></td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getCtr(). '%</td>'
+                                            . '<td>' . $googleAdsRow->getMetrics()->getCtr() * 100 . '%</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getImpressions() . '</td>'
@@ -112,7 +112,7 @@ use AdsAdmin\Helpers;
                                             . '<td>' . $googleAdsRow->getMetrics()->getAverageCpc() . '</td></tr>';
 
                                             echo '<tr><td>Previous</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr(). '%</td>'
+                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr() * 100 . '%</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getImpressions() . '</td>'

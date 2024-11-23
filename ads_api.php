@@ -1,7 +1,8 @@
 <?php 
 require_once __DIR__.'/vendor/autoload.php';
+require_once 'database_test.php';
 
-
+use AdsAdmin\DatabaseHelpers;
 
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClient;
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClientBuilder;
@@ -86,7 +87,7 @@ function getStartAndEndDate($startDate, $endDate, $range, $previous){
 }
 
 function getStreamFromQuery($query){
-    $customerId = '6079650413';
+    $customerId = DatabaseHelpers\getKeyValue('google_ads_php.ini', 'GOOGLE_ADS', 'customerId');
     
     $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()->build();
     $googleAdsClient = (new GoogleAdsClientBuilder())
@@ -154,7 +155,7 @@ function getAdsData($startDate, $endDate, $range, $adGroupId, $previous=False){
 
 function getAdGroupData($startDate, $endDate, $range, $campaignId, $previous=False){
   
-    $customerId = '6079650413';
+    $customerId = DatabaseHelpers\getKeyValue('google_ads_php.ini', 'GOOGLE_ADS', 'customerId');
 
     $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
@@ -168,24 +169,19 @@ function getAdGroupData($startDate, $endDate, $range, $campaignId, $previous=Fal
 
 function getCampaignData($startDate, $endDate, $range, $previous=False){
     
-    error_reporting(E_ALL);
-    ini_set('display_errors', 'On');
     $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 
     // Creates a query that retrieves all campaigns.
-    $query = "SELECT campaign.id, metrics.conversions, campaign.name, metrics.clicks, metrics.impressions, metrics.cost_per_conversion, metrics.average_cost, metrics.ctr FROM campaign WHERE segments.date BETWEEN " . ($startDate == null ? '\'1900-01-01\'' : '\'' . $startDate . '\'') . " AND " . ($endDate == null ? '\'2100-01-01\'' : '\'' . $endDate . '\'') . " AND campaign.status = 'ENABLED' ORDER BY campaign.start_date DESC";
+    $query = "SELECT campaign.id, metrics.conversions, campaign.name, metrics.clicks, metrics.impressions, metrics.average_cpc, metrics.cost_micros, metrics.ctr FROM campaign WHERE segments.date BETWEEN " . ($startDate == null ? '\'1900-01-01\'' : '\'' . $startDate . '\'') . " AND " . ($endDate == null ? '\'2100-01-01\'' : '\'' . $endDate . '\'') . " AND campaign.status = 'ENABLED' ORDER BY campaign.start_date DESC";
     
     return getStreamFromQuery($query);
 }
 
 function updateAd($adId, $headlines, $descriptions, $finalUrl, $path1, $path2){
-    error_reporting(E_ALL);
-    ini_set('display_errors', 1);
-
-    //TODO replace with variable from configuration file
-    $customerId = '6079650413';
+  
+    $customerId = DatabaseHelpers\getKeyValue('google_ads_php.ini', 'GOOGLE_ADS', 'customerId');
 
     // Generate a refreshable OAuth2 credential for authentication.
     $oAuth2Credential = (new OAuth2TokenBuilder())->fromFile()->build();
@@ -207,8 +203,6 @@ function updateAd($adId, $headlines, $descriptions, $finalUrl, $path1, $path2){
     foreach($descriptions as $description){
         $newDescriptions[] = (new AdTextAsset())->setText($description);
     }
-
-    echo $path2;
     // Create the Responsive Search Ad info with the new headlines
     $responsiveSearchAdInfo = new ResponsiveSearchAdInfo([
         'headlines' => $newHeadlines,
@@ -234,6 +228,7 @@ function updateAd($adId, $headlines, $descriptions, $finalUrl, $path1, $path2){
     $response = $adServiceClient->mutateAds(MutateAdsRequest::build($customerId, [$adOperation]));
 
     printf("Updated ad with resource name: %s\n", $response->getResults()[0]->getResourceName());
+    return null;
 }
 catch (GoogleAdsException $googleAdsException) {
     printf(
@@ -251,14 +246,14 @@ catch (GoogleAdsException $googleAdsException) {
             PHP_EOL
         );
     }
-    exit(1);
+    return $error->getMessage();
 } catch (ApiException $apiException) {
     printf(
         "ApiException was thrown with message '%s'.%s",
         $apiException->getMessage(),
         PHP_EOL
     );
-    exit(1);
+    return $apiException->getMessage();
 }
 
 }

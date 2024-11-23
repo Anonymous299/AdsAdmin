@@ -2,7 +2,7 @@
 
 
 require_once __DIR__.'/vendor/autoload.php';
-require 'database_test.php';
+require_once 'database_test.php';
 
 use AdsAdmin\DatabaseHelpers;
 

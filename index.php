@@ -89,21 +89,22 @@ use AdsAdmin\Helpers;
                                         foreach ($mi as [$googleAdsRow, $previousGoogleAdsRow]) {
                                             $urlArray["campaignId"] = $googleAdsRow->getCampaign()->getId();
                                             $urlArray["campaignName"] = $googleAdsRow->getCampaign()->getName();
+                                            $cost = number_format($googleAdsRow->getMetrics()->getAverageCost()/1000000, 2);
                                             echo '<tr><td><a href="'. Helpers\generateUrlWithDate('ad-groups.php', $urlArray, $_SESSION["start"], $_SESSION["end"], $_SESSION["range"]) .'">' . $googleAdsRow->getCampaign()->getName() .'</a></td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getImpressions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getCtr(). '%</td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getAverageCost() . '</td></tr>';
-
+                                            . '<td>$' . $googleAdsRow->getMetrics()->getAverageCpc() . '</td>'
+                                            . '<td>$' . $cost . '</td></tr>';
+                                            $prevCost = number_format($previousGoogleAdsRow->getMetrics()->getAverageCost()/1000000, 2);
                                             echo '<tr><td>Previous</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getImpressions() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr(). '%</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getAverageCost() . '</td></tr>';
+                                            . '<td>$' . $previousGoogleAdsRow->getMetrics()->getAverageCpc() . '</td>'
+                                            . '<td>$' . $cost . '</td></tr>';
                                         }   
                                         ?>
                                     </tbody>

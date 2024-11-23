@@ -61,4 +61,19 @@ function generateDateFilter($fileName){
     echo '<form action="' .basename($fileName).'" method="GET"><span><span>Date Range</span><input class="form-control" name="start" type="date" style="width: 200px;">to<input class="form-control" name="end" type="date" style="width: 200px;"></span><input class="btn btn-primary" type="submit" value="Apply" style="text-align: right;"></form>';
 }
 
+function getProtocol(){
+    return isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' ? 'https' : 'http';
+}
+
+function getBaseUrl(){
+    
+    $baseUrl = sprintf(
+        "%s://%s%s",
+        getProtocol(),
+        $_SERVER['HTTP_HOST'],
+        rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\')
+    );
+    return $baseUrl;
+}
+
 ?>
