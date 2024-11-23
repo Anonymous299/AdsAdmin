@@ -157,22 +157,25 @@ use AdsAdmin\Helpers;
                                     <h1>Landing Page</h1>';
                                     
                                     $finalUrls = $googleAdsRow->getAdGroupAd()->getAd()->getFinalUrls();
-                                    foreach($finalUrls as $finalUrl){
-                                        echo '<p style="font-size: 14px;">' . $finalUrl .'</p>';
-                                    }
+                                    $finalUrl = $finalUrls[0];
+                                        echo '<input type="text" id="finalUrl' . $adCount . '" name="finalUrl" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $finalUrl . '">';
+                                    
+                                
 
                                     echo '<h1>Display Path</h1>';
 
                                     $path1 = $googleAdsRow->getAdGroupAd()->getAd()->getResponsiveSearchAd()->getPath1();
                                     $path2 = $googleAdsRow->getAdGroupAd()->getAd()->getResponsiveSearchAd()->getPath2();
-                                    foreach($finalUrls as $finalUrl){
-                                       if(!empty($path1)){ echo '<p style="font-size: 14px;">' . $finalUrl . $path1 .
-                                         '/' . $path2 .'</p>';
-                                       }
-                                       else{
-                                        echo '<p style="font-size: 14px;">' . $finalUrl . '</p>';
-                                       }
-                                    }
+                                   
+                                   
+                                       echo '<p style="font-size: 14px;">' . $finalUrl ;
+                                       echo '<input type="text" id="path1' . base64_encode($adCount) . '" name="path1' . base64_encode($adCount) . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $path1 . '">';
+                                       echo '/';
+                                       echo '<input type="text" id="path2' . base64_encode($adCount) . '" name="path2' . base64_encode($adCount) . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $path2 . '">';
+                                       echo '</p>'; 
+                           
+                                    
+                                    
                                      echo '<button class="btn btn-primary" type="submit">Save</button>
                                 </form>
                                     </div>

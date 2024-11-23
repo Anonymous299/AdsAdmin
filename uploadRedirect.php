@@ -8,6 +8,10 @@
     $newHeadlines = [];
     $newDescriptions = [];
 
+    $path1 = "";
+    $path2 = "";
+    $finalUrl = "";
+
     foreach($_GET as $key => $value){
         if(str_contains($key, 'headline') && !empty($value)){
             $newHeadlines[] = $value;
@@ -15,10 +19,19 @@
         else if(str_contains($key, 'description') && !empty($value)){
             $newDescriptions[] = $value;
         }
+        else if(str_contains($key, 'path1')){
+            $path1 = $value;
+        }
+        else if(str_contains($key, 'path2')){
+            $path2 = $value;
+        }
+        else if(str_contains($key, 'finalUrl')){
+            $finalUrl = $value;
+        }
     }
     echo count($newDescriptions);
 
-    updateAd($_GET["adId"], $newHeadlines, $newDescriptions);
+    updateAd($_GET["adId"], $newHeadlines, $newDescriptions, $finalUrl, $path1, $path2);
 
 
     $redirect_uri = 'http://' . $_SERVER['HTTP_HOST'] .'/AdsAdmin'. '/ads.php';

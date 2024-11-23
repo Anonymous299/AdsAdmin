@@ -180,7 +180,7 @@ function getCampaignData($startDate, $endDate, $range, $previous=False){
     return getStreamFromQuery($query);
 }
 
-function updateAd($adId, $headlines, $descriptions){
+function updateAd($adId, $headlines, $descriptions, $finalUrl, $path1, $path2){
     error_reporting(E_ALL);
     ini_set('display_errors', 1);
 
@@ -208,17 +208,20 @@ function updateAd($adId, $headlines, $descriptions){
         $newDescriptions[] = (new AdTextAsset())->setText($description);
     }
 
-    
+    echo $path2;
     // Create the Responsive Search Ad info with the new headlines
     $responsiveSearchAdInfo = new ResponsiveSearchAdInfo([
         'headlines' => $newHeadlines,
-        'descriptions' => $newDescriptions
+        'descriptions' => $newDescriptions,
+        'path1' => $path1,
+        'path2' => $path2
     ]);
 
     // Create the Ad object with the updated Responsive Search Ad info
     $ad = new Ad([
         'resource_name' => ResourceNames::forAd($customerId, $adId), // Ad resource name
         'responsive_search_ad' => $responsiveSearchAdInfo,
+        'final_urls' => [$finalUrl]
     ]);
 
     // Create the AdOperation for the update
