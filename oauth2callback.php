@@ -56,7 +56,7 @@ if (isset($_GET['code']))
   if(empty($client->getRefreshToken())){
     die("Error: Could not fetch refresh token. Input it manually, or create new credentials");
   }
-  DatabaseHelpers\updateIniFile('google_ads_php.ini', 'OAUTH2', 'refreshToken', $client->getRefreshToken());
+  $result = DatabaseHelpers\updateIniFile('google_ads_php.ini', 'OAUTH2', 'refreshToken', $client->getRefreshToken());
 
   
   // // Space-separated string of granted scopes if it exists, otherwise null.
@@ -67,9 +67,10 @@ if (isset($_GET['code']))
   //   'Ads' => str_contains($granted_scopes, $google_ads_scope)
   // ];
   // $_SESSION['granted_scopes_dict'] = $granted_scopes_dict;
-  
+  if($result == True){
   $redirect_uri = 'http://' . $_SERVER['HTTP_HOST']. '/AdsAdmin' . '/';
   header('Location: ' . filter_var($redirect_uri, FILTER_SANITIZE_URL));
+  }
 }
 
 // An error response e.g. error=access_denied

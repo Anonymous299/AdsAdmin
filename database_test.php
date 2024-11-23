@@ -108,10 +108,12 @@ function updateIniFile($filePath, $section, $key, $newValue) {
     }
     // Write the new content back to the file
     if (file_put_contents($filePath, $newIniContent) === false) {
-        die("Error: Could not write to the INI file.");
+        echo "Must be put into google_ads_php.in manually. refreshToken: " . $newIniContent;
+        return False;
     }
 
     echo "Key '$key' in section '$section' updated successfully.\n";
+    return True;
 }
 
 function isKeyValueSet($filePath, $section, $key){

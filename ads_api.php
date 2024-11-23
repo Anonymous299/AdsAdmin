@@ -1,6 +1,8 @@
 <?php 
 require_once __DIR__.'/vendor/autoload.php';
 
+
+
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClient;
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClientBuilder;
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsException;
