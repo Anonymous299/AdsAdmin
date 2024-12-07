@@ -82,6 +82,12 @@ use AdsAdmin\Helpers;
                         //Get a list of ads to iterate over
                         $stream = getAdsData($_SESSION["start"], $_SESSION["end"], $_SESSION["range"], $_SESSION["adGroupId"]);
                         foreach ($stream->iterateAllElements() as $googleAdsRow) {
+
+                            $costPerClick = number_format($googleAdsRow->getMetrics()->getAverageCpc()/1000000, 2);
+                            $costPerConversion = number_format($googleAdsRow->getMetrics()->getCostPerConversion()/1000000, 2);
+                            $ctr = number_format($googleAdsRow->getMetrics()->getCtr() * 100, 2);
+                            $conversionRate = number_format($googleAdsRow->getMetrics()->getConversionsFromInteractionsRate() * 100, 2);
+
                             echo '<div class="col">
                             <div class="card">
                                 <div class="card-body p-4">
@@ -99,11 +105,11 @@ use AdsAdmin\Helpers;
                                                 </tr>
                                                 <tr>
                                                     <td>CTR</td>
-                                                    <td>' . $googleAdsRow->getMetrics()->getCtr() * 100 . '%</td>
+                                                    <td>' . $ctr . '%</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Cost/Click</td>
-                                                    <td>'. $googleAdsRow->getMetrics()->getAverageCpc() . '</td>
+                                                    <td>$'. $costPerClick . '</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Conversions</td>
@@ -111,11 +117,11 @@ use AdsAdmin\Helpers;
                                                 </tr>
                                                 <tr>
                                                     <td>Conversion Rate</td>
-                                                    <td>' . $googleAdsRow->getMetrics()->getConversionsFromInteractionsRate() * 100 . '%</td>
+                                                    <td>' . $conversionRate . '%</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Cost/Conversion</td>
-                                                    <td>$' . $googleAdsRow->getMetrics()->getCostPerConversion() . '</td>
+                                                    <td>$' . $costPerConversion . '</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Impressions</td>

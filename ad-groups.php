@@ -101,23 +101,32 @@ use AdsAdmin\Helpers;
                                                 $keywordsString = $keywordsString . '('. $keywordRow->getAdGroupCriterion()->getKeyword()->getText() . ') ';
                                              }
                                             $urlArray["keywords"] = $keywordsString;
+                                            
+                                            $costPerConv = number_format($googleAdsRow->getMetrics()->getCostPerConversion()/1000000, 2);
+                                            $costPerConvPrev = number_format($previousGoogleAdsRow->getMetrics()->getCostPerConversion()/1000000, 2);
 
+                                            $cpc = number_format($googleAdsRow->getMetrics()->getAverageCpc()/1000000, 2);
+                                            $cpcPrev = number_format($previousGoogleAdsRow->getMetrics()->getAverageCpc()/1000000, 2);
+
+                                            $ctr = number_format($googleAdsRow->getMetrics()->getCtr() * 100, 2);
+                                            $ctrPrev = number_format($previousGoogleAdsRow->getMetrics()->getCtr() * 100, 2);
+                                            
                                             //Print metrics
                                             echo '<tr><td><a class="text-end" href="' . Helpers\generateUrlWithDate('ads.php', $urlArray, $_SESSION["start"], $_SESSION["end"], $_SESSION["range"]) .'">' . $googleAdsRow->getAdGroup()->getName() .'</a></td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getCtr() * 100 . '%</td>'
+                                            . '<td>' . $ctr . '%</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $googleAdsRow->getMetrics()->getImpressions() . '</td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
-                                            . '<td>' . $googleAdsRow->getMetrics()->getAverageCpc() . '</td></tr>';
+                                            . '<td>$' . $costPerConv . '</td>'
+                                            . '<td>$' . $cpc . '</td></tr>';
 
                                             echo '<tr><td>Previous</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCtr() * 100 . '%</td>'
+                                            . '<td>' . $ctrPrev . '%</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getClicks() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getConversions() . '</td>'
                                             . '<td>' . $previousGoogleAdsRow->getMetrics()->getImpressions() . '</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getCostPerConversion() . '</td>'
-                                            . '<td>' . $previousGoogleAdsRow->getMetrics()->getAverageCpc() . '</td></tr>';
+                                            . '<td>$' . $costPerConvPrev . '</td>'
+                                            . '<td>$' . $cpcPrev . '</td></tr>';
 
                                             echo '<tr><td class="text-end">Keywords:</td>';
                                            //Print keywords
