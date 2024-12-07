@@ -138,12 +138,12 @@ use AdsAdmin\Helpers;
                                     $headlineCount = 0;
                                     $headlineMax = 15;
                                     foreach($headlines as $headline){
-                                        echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $headline->getText() . '">';
+                                        echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" size="30" maxlength="30" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off value="' . $headline->getText() . '">';
                                         $headlineCount = $headlineCount + 1;
                                     }
                                     // Create empty fields in case we want to add more headlines to the ad
                                     while($headlineCount < $headlineMax){
-                                        echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off>';
+                                        echo  '<input type="text" id="headline' . $adCount . $headlineCount . '" name="headline' . $adCount . $headlineCount . '" size="30" maxlength="30" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;" autocomplete=off>';
                                         $headlineCount = $headlineCount + 1;
                                     }
                                     
@@ -153,12 +153,14 @@ use AdsAdmin\Helpers;
                                     $descriptions = $googleAdsRow->getAdGroupAd()->getAd()->getResponsiveSearchAd()->getDescriptions();
                                     $descriptionMax = 4;
                                     foreach($descriptions as $description){
-                                        echo '<textarea autocomplete=off id="description' . $adCount . $descriptionCount . '" name="description' . $adCount . $descriptionCount . '">' . $description->getText() . '</textarea>';
+                                        echo '<textarea autocomplete=off id="description' . $adCount . $descriptionCount . '" name="description' . $adCount . $descriptionCount . '" rows="3" cols="30" maxlength="90" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;">' . $description->getText() . '</textarea>';
+                                        
                                         $descriptionCount = $descriptionCount + 1;
                                     }
                                     // Create empty fields in case we want to add more descriptions to the ad
                                     while($descriptionCount < $descriptionMax){
-                                        echo '<textarea autocomplete=off></textarea>';
+                                        echo '<textarea autocomplete=off id="description' . $adCount . $descriptionCount . '" name="description' . $adCount . $descriptionCount . '" rows="3" cols="30" maxlength="90" style="margin: 4px;border-radius: 3px;border-width: 1px;border-style: solid;padding: 0px;"></textarea>';
+                                       
                                         $descriptionCount = $descriptionCount + 1;
                                     }
                                     
