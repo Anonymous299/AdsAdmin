@@ -1,8 +1,10 @@
 <?php 
 require_once __DIR__.'/vendor/autoload.php';
 require_once 'database_test.php';
+require_once 'helpers.php';
 
 use AdsAdmin\DatabaseHelpers;
+use AdsAdmin\Helpers;
 
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClient;
 use Google\Ads\GoogleAds\Lib\V18\GoogleAdsClientBuilder;
@@ -22,69 +24,6 @@ use Google\Ads\GoogleAds\V18\Services\AdOperation;
 use Google\Ads\GoogleAds\V18\Services\MutateAdsRequest;
 use Google\Ads\GoogleAds\V18\Resources\Ad;
 
-
-function getWeekAgoStartDate($previous){
-    $subtraction_factor = $previous ? 2*7*86400 : 7*86400;
-    $week_ago= time() - $subtraction_factor;
-    return gmdate("Y-m-d", $week_ago);
-}
-
-function getStartOfMonthDate($previous){
-    $firstOfMonth = date('Y-m-01');
-    if(!$previous){
-        return $firstOfMonth;
-    }
-    $firstOfLastMonth = new DateTime("first day of last month");
-    return $firstOfLastMonth->format('Y-m-d');
-}
-
-function getLast30StartDate($previous){
-    $subtraction_factor = $previous ? 2*30*86400 : 30*86400;
-    $last30 = time() - $subtraction_factor;
-    return gmdate("Y-m-d", $last30);
-}
-
-function getStartAndEndDate($startDate, $endDate, $range, $previous){
-    
-    if($startDate == null && $endDate == null){
-        if($range == null || $range == 0){
-            $out["startDate"] = getWeekAgoStartDate($previous);
-            if($previous){
-                $out["endDate"] = getWeekAgoStartDate(False);
-            }
-        }
-        else if($range == 1){
-            $out["startDate"] = getStartOfMonthDate($previous);
-            if($previous){
-                $out["endDate"] = getStartOfMonthDate(False);
-            }
-        }
-        else{
-            $out["startDate"] = getLast30StartDate($previous);
-            if($previous){
-                $out["endDate"] = getLast30StartDate(False);
-            }
-        }
-        
-        if(!$previous){
-        $out["endDate"] = gmdate("Y-m-d", time());
-        }
-    }
-    else{
-        if($startDate != null && $previous == True){
-            $startTime = strtotime($startDate);
-            $endTime = $endDate != null ? strtotime($endDate) : time();
-            $diff = $endTime - $startTime;
-            $prevStartTime = $startTime - $diff;
-            $endDate = $startDate;
-            $startDate = gmdate("Y-m-d", $prevStartTime);
-        }
-
-        $out["startDate"] = $startDate;
-        $out["endDate"] = $endDate;
-    }
-    return $out;
-}
 
 function getStreamFromQuery($query){
     $customerId = DatabaseHelpers\getKeyValue('google_ads_php.ini', 'GOOGLE_ADS', 'customerId');
@@ -143,7 +82,7 @@ function getKeywordData($adGroupId){
 
 function getAdsData($startDate, $endDate, $range, $adGroupId, $previous=False){
 
-    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
+    $dates = Helpers\getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 
@@ -157,7 +96,7 @@ function getAdGroupData($startDate, $endDate, $range, $campaignId, $previous=Fal
   
     $customerId = DatabaseHelpers\getKeyValue('google_ads_php.ini', 'GOOGLE_ADS', 'customerId');
 
-    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
+    $dates = Helpers\getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 
@@ -169,7 +108,7 @@ function getAdGroupData($startDate, $endDate, $range, $campaignId, $previous=Fal
 
 function getCampaignData($startDate, $endDate, $range, $previous=False){
     
-    $dates = getStartAndEndDate($startDate, $endDate, $range, $previous);
+    $dates = Helpers\getStartAndEndDate($startDate, $endDate, $range, $previous);
     $startDate = $dates["startDate"];
     $endDate = $dates["endDate"];
 

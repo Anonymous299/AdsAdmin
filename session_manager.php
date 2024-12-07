@@ -1,4 +1,7 @@
 <?php 
+require_once 'helpers.php';
+use AdsAdmin\Helpers;
+
 session_start();
 
 if($_GET["adGroupId"]!=null){
@@ -23,15 +26,18 @@ if($_GET["campaignName"]!=null){
 
 if($_GET["start"]!=null){
     $_SESSION["start"] = $_GET["start"];
+    $_SESSION["range"] = null;
 }
 
 if($_GET["end"]!=null){
     $_SESSION["end"] = $_GET["end"];
+    $_SESSION["range"] = null;
 }
 
 if($_GET["range"]!=null){
+    $dates = Helpers\getStartAndEndDate(null, null, $_GET["range"], False);
     $_SESSION["range"] = $_GET["range"];
-    $_SESSION["start"] = null;
-    $_SESSION["end"] = null;
+    $_SESSION["start"] = $dates["startDate"];
+    $_SESSION["end"] = $dates["endDate"];
 }
 ?>
