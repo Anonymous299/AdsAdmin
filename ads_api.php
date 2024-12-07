@@ -75,7 +75,9 @@ function getStreamFromQuery($query){
 function getKeywordData($adGroupId){
     
     
-    $query = "SELECT ad_group_criterion.keyword.text FROM ad_group_criterion WHERE ad_group_criterion.type = 'KEYWORD' AND ad_group.id = " . $adGroupId;
+    $query = "SELECT ad_group_criterion.keyword.text FROM ad_group_criterion WHERE ad_group_criterion.type = 'KEYWORD' AND 
+    ad_group_criterion.system_serving_status = 'ELIGIBLE' AND ad_group_criterion.keyword.text IS NOT NULL
+     AND ad_group_criterion.negative = FALSE AND ad_group.id = " . $adGroupId;
      
     return getStreamFromQuery($query);
 }
