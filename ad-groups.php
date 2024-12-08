@@ -129,10 +129,17 @@ use AdsAdmin\Helpers;
                                             . '<td>$' . $cpcPrev . '</td></tr>';
 
                                             echo '<tr><td class="text-end">Keywords:</td>';
+                                            echo '<td colspan="6">';
                                            //Print keywords
+                                           $count = 0;
                                             foreach ($keywordsArray as $keywordRow) {
-                                            echo '<td>' . $keywordRow->getAdGroupCriterion()->getKeyword()->getText() . '</td>';
+                                            echo $keywordRow->getAdGroupCriterion()->getKeyword()->getText();
+                                            $count = $count + 1;
+                                            if($count != count($keywordsArray)){
+                                                echo ', ';
                                             }
+                                            }
+                                            echo '</td>';
                                        echo '</tr>';
                                         }
                                             
